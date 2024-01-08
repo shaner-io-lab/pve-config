@@ -1,0 +1,7 @@
+- name: Proxmox VE Configuration
+  hosts: bigboy.lab.shaner.local
+  remote_user: ansible
+  become: true
+
+  roles:
+    - helper-scripts

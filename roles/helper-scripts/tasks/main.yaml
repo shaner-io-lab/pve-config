@@ -1,0 +1,33 @@
+---
+
+- name: Configure Proxmox Apt Lists
+  ansible.builtin.template:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+    mode: "0644"
+    owner: root
+    group: root
+  loop:
+    - { src: "sources.list.j2", dest: "/etc/apt/sources.list" }
+    - { src: "pve-enterprise.list.j2", dest: "/etc/apt/sources.list.d/pve-enterprise.list" }
+    - { src: "pve-install-repo.list.j2", dest: "/etc/apt/sources.list.d/pve-install-repo.list" }
+    - { src: "pvetest-for-beta.list.j2", dest: "/etc/apt/sources.list.d/pvetest-for-beta.list" }
+
+- name: Update dependency cache
+  ansible.builtin.apt:
+    name: "*"
+    update_cache: true
+
+- name: Ensure no-nag script is in apt.conf.d
+  ansible.builtin.copy:
+    src: no-nag-script
+    dest: /etc/apt/apt.conf.d/no-nag-script
+    mode: "0644"
+    owner: root
+    group: root
+  register: no_nag_script
+
+- name: Reinstall proxmox-widget-toolkit if needed
+  ansible.builtin.command:
+    cmd: apt --reinstall install proxmox-widget-toolkit
+  when: no_nag_script.changed
