@@ -25,9 +25,4 @@
     mode: "0644"
     owner: root
     group: root
-  register: no_nag_script
-
-- name: Reinstall proxmox-widget-toolkit if needed
-  ansible.builtin.command:
-    cmd: apt --reinstall install proxmox-widget-toolkit
-  when: no_nag_script.changed
+  notify: helper-scripts - Reinstall proxmox-widget-toolkit

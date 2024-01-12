@@ -1,0 +1,5 @@
+---
+
+- name: helper-scripts - Reinstall proxmox-widget-toolkit
+  ansible.builtin.command:
+    cmd: apt --reinstall install proxmox-widget-toolkit
